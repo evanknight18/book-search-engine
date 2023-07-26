@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
-// set token secret and expiration date
+// Set token secret and expiration date
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
 module.exports = {
-  // function for our authenticated routes
-  authMiddleware: function (req, res, next) {
-    // allows token to be sent via  req.query or headers
+  // This function is used as middleware in Apollo Server setup and extracts the user's token, verifies it, and attaches the user data to the context
+  authMiddleware: function ({ req }) {
+    // Allows token to be sent via req.query or headers
     let token = req.query.token || req.headers.authorization;
 
     // ["Bearer", "<tokenvalue>"]
@@ -15,25 +15,29 @@ module.exports = {
       token = token.split(' ').pop().trim();
     }
 
+    // If there is no token, return an object indicating no authenticated user
     if (!token) {
-      return res.status(400).json({ message: 'You have no token!' });
+      return { user: null };
     }
 
-    // verify token and get user data out of it
     try {
+      // Verify token and get user data out of it
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
+      // If successful, return an object with the user data
+      return { user: data };
     } catch {
       console.log('Invalid token');
-      return res.status(400).json({ message: 'invalid token!' });
+      // If the token is invalid, return an object indicating no authenticated user
+      return { user: null };
     }
-
-    // send to next endpoint
-    next();
   },
+
+  // This function is used to generate a token for a user
   signToken: function ({ username, email, _id }) {
+    // The payload includes the user's username, email, and _id
     const payload = { username, email, _id };
 
+    // Return a signed token with the user's payload and an expiration
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },
 };
