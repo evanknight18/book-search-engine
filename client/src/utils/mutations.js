@@ -7,7 +7,8 @@ export const LOGIN_USER = gql`
       user {
         id
         username
-        // add any other user fields you need
+        email
+        // Include any other user fields you need
       }
     }
   }
@@ -20,7 +21,8 @@ export const ADD_USER = gql`
       user {
         id
         username
-        // add any other user fields you need
+        email
+        // Include any other user fields you need
       }
     }
   }
@@ -40,6 +42,7 @@ export const SAVE_BOOK = gql`
         title
         image
         link
+        // Include any other book fields you need
       }
     }
   }
@@ -51,10 +54,10 @@ export const REMOVE_BOOK = gql`
       id
       username
       savedBooks {
-        // add any other book fields you need
         bookId
         authors
         title
+        // Include any other book fields you need
       }
     }
   }
