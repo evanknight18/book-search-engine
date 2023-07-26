@@ -23,10 +23,13 @@ const server = new ApolloServer({
   context: authMiddleware,
 });
 
-server.applyMiddleware({ app });
+// start the server, then apply middleware
+server.start().then(() => {
+  server.applyMiddleware({ app });
 
-app.use(routes);
+  app.use(routes);
 
-db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
-});
+  db.once('open', () => {
+    app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  });
+}).catch(err => console.error(err));

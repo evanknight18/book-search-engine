@@ -10,7 +10,7 @@ import { REMOVE_BOOK } from '../utils/mutations'; // Update path according to yo
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  const [removeBook] = useMutation(REMOVE_BOOK);
 
   const userData = data?.me || {};
 
